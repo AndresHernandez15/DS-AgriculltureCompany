@@ -5,13 +5,14 @@ class Crop(object):
     """
     Class used to represent a Crop.
     """
-    next_id = 1
 
-    def __init__(self, type: str = 'type', area: float = 0.0, price: float = 0.0,
+    def __init__(self, id_crop: int = 0, type: str = 'type', area: float = 0.0, price: float = 0.0,
                  date: datetime = datetime(1900, 1, 1), amount: int = 0):
         """
         Crop Constructor Object.
 
+        :param id_crop: The unique identifier of the crop.
+        :type id_crop: int
         :param type: The type of the crop.
         :type type: str
         :param area: The area of the crop in square units.
@@ -23,8 +24,7 @@ class Crop(object):
         :param amount: The total amount of this crop.
         :type amount: int
         """
-        self._id_crop = Crop.next_id
-        Crop.next_id += 1
+        self._id_crop = id_crop
         self._type = type
         self._area = area
         self._price = price
@@ -144,5 +144,5 @@ class Crop(object):
           :returns: sting crop
           :rtype: str
         """
-        return '({0}, {1}, {2}, {3}, {4}, {5})'.format(self.id_crop, self.type, self.area, self.date, self.amount,
-                                                       self.price)
+        return '({0}, {1}, {2}, {3}, {4}, {5})'.format(self.id_crop, self.type, self.area, self.price, self.date,
+                                                       self.amount)

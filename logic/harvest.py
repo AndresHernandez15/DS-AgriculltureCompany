@@ -6,7 +6,7 @@ class Harvest(object):
     Class used to represent a harvest.
     """
 
-    def __init__(self, id_harvest: int = 0, type: str = 'type', date: datetime = datetime(1900, 1, 1), weight: int = 0):
+    def __init__(self, id_harvest: int = 0, type: str = 'type', date: datetime = datetime(1900, 1, 1), weight: float = 0):
         """
         harvest Constructor Object.
 
@@ -17,7 +17,7 @@ class Harvest(object):
         :param date: The date of the harvest.
         :type date: datetime
         :param weight: The weight of the harvest.
-        :type weight: int
+        :type weight: float
         """
         self._id_harvest = id_harvest
         self._type = type
@@ -79,7 +79,7 @@ class Harvest(object):
         self._date = date
 
     @property
-    def weight(self) -> int:
+    def weight(self) -> float:
         """ Returns the weight of the harvest.
 
         :return: The weight of the harvest.
@@ -88,10 +88,17 @@ class Harvest(object):
         return self._weight
 
     @weight.setter
-    def weight(self, weight: int):
+    def weight(self, weight: float):
         """ Sets the weight of the harvest.
 
         :param weight: The weight of the harvest.
         :type weight: int
         """
         self._weight = weight
+
+    def __str__(self):
+        """ Returns str of crop.
+          :returns: sting crop
+          :rtype: str
+        """
+        return '({0}, {1}, {2}, {3})'.format(self.id_harvest, self.type, self.date, self.weight)
