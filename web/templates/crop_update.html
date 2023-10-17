@@ -3,26 +3,27 @@
 {% block page_content %}
 
 <div class="page-header">
-    <h1>Crop Form</h1>
-    <p>Update Crop Information:</p>
+    <h1>Crop Information Form</h1>
+    <p>Enter the crop information:</p>
     <br>
     <form action="/crop_detail" method="post">
         <input type="hidden" id="op" name="op" value="U">
         <div class="input-group mb-3">
             <span class="input-group-text" id="inputGroup_id">ID</span>
-            <input type="text" class="form-control" name="id_crop" aria-label="Sizing example input" aria-describedby="inputGroup_idt" placeholder={{id_crop}} value={{id_crop}} readonly>
+            <input type="number" class="form-control" name="id_crop" aria-label="Sizing example input"
+                   aria-describedby="inputGroup_idt" placeholder={{id_crop}} value={{id_crop}} readonly>
         </div>
 
         <div class="input-group mb-3">
             <span class="input-group-text" id="inputGroup_cropType">Crop Type</span>
-            <input type="text" class="form-control" name="crop_type" aria-label="Sizing example input"
+            <input type="text" class="form-control" name="type" aria-label="Sizing example input"
                    aria-describedby="inputGroup_cropType">
         </div>
 
         <div class="input-group mb-3">
             <span class="input-group-text" id="inputGroup_area">Area of Cultivation</span>
             <input type="number" class="form-control" name="area" aria-label="Sizing example input"
-                   aria-describedby="inputGroup_area" step="0.01">
+                   aria-describedby="inputGroup_area" step="0.1">
         </div>
 
         <div class="input-group mb-3">
@@ -33,17 +34,17 @@
 
         <div class="input-group mb-3">
             <span class="input-group-text" id="inputGroup_amount">Quantity Planted</span>
-            <input type="number" class="form-control" name="quantity_planted" aria-label="Sizing example input"
+            <input type="number" class="form-control" name="amount" aria-label="Sizing example input"
                    aria-describedby="inputGroup_amount">
         </div>
 
         <div class="input-group mb-3">
             <span class="input-group-text" id="inputGroup_expenses">Expenses</span>
-            <input type="number" class="form-control" name="expenses" aria-label="Sizing example input"
-                   aria-describedby="inputGroup_expenses" step="0.01">
+            <input type="number" class="form-control" name="price" aria-label="Sizing example input"
+                   aria-describedby="inputGroup_expenses" step="0.1">
         </div>
         <br>
-        <input class="btn btn-primary" type="submit" name="form" value="Submit" />
+        <input class="btn btn-primary" type="submit" name="form" value="Submit"/>
     </form>
 </div>
 
