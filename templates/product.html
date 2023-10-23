@@ -9,6 +9,12 @@
     <form action="/product_detail" method="post">
         <input type="hidden" id="op" name="op" value="I">
         <div class="input-group mb-3">
+            <span class="input-group-text" id="inputGroup_Silo">Silo</span>
+            <input type="number" class="form-control" name="silo" aria-label="Sizing example input"
+                   aria-describedby="inputGroup_Silo">
+        </div>
+
+        <div class="input-group mb-3">
             <span class="input-group-text" id="inputGroup_id">ID</span>
             <input type="number" class="form-control" name="id_product" aria-label="Sizing example input"
                    aria-describedby="inputGroup_idt" placeholder={{id_product}} value={{id_product}} readonly>
@@ -30,6 +36,12 @@
             <span class="input-group-text" id="inputGroup_sellprice">Sell price ($/kg)</span>
             <input type="number" class="form-control" name="sellprice" aria-label="Sizing example input"
                    aria-describedby="inputGroup_sellprice" step="0.1">
+        </div>
+
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="inputGroup_amount">Amount (boxes)</span>
+            <input type="number" class="form-control" name="amount" aria-label="Sizing example input"
+                   aria-describedby="inputGroup_amount" step="1">
         </div>
 
         <br>
