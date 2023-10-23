@@ -9,9 +9,20 @@ bootstrap = Bootstrap(app)
 crop_controller = CropController()
 silo_controller = SiloController()
 
+
 @app.route("/")
 def home():
     return render_template('index.html')
+
+
+@app.route("/about_us")
+def about_us():
+    return render_template('about_us.html')
+
+
+@app.route("/contact")
+def contact_us():
+    return render_template('contact_us.html')
 
 
 """ Crop Endpoints """
@@ -123,6 +134,11 @@ def products():
 @app.route('/product_delete/<id_product>', methods=['GET'])
 def product_delete(id_product):
     return silo_controller.product_delete(id_product)
+
+
+@app.route('/show_products/<id_silo>', methods=['GET'])
+def product_show(id_silo):
+    return silo_controller.show_products(id_silo)
 
 
 if __name__ == '__main__':
