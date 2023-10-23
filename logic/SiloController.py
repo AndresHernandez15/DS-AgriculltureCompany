@@ -1,4 +1,5 @@
 from flask import render_template, request
+
 from logic.silo import Silo
 from logic.product import Product
 
@@ -47,32 +48,62 @@ class SiloController:
 
     def product_detail(self):
         op = request.form['op']
+        silo = int(request.form['silo'])
         id_product = int(request.form['id_product'])
         product_type = request.form['type']
         weight = float(request.form['weight'])
         sellprice = float(request.form['sellprice'])
+        amount = int(request.form['amount'])
 
-        p = Product(id_product=id_product, type=product_type, weight=weight, sellprice=sellprice)
+        p = Product(id_product=id_product, type=product_type, weight=weight, sellprice=sellprice, amount=amount)
         print(p)
+        total_amount = 0
+        for row in self.model:
+            for col in row.products:
+                total_amount += col.amount
+
         if op == 'I':
-            self.model.append(p)
+            if self.model[silo-1].capacity >= total_amount:
+                self.model[silo-1].products.append(p)
+            else:
+                return render_template('silofull.html')
         elif op == 'U':
             for row in self.model:
-                if row.id_product == id_product:
-                    row.type = product_type
-                    row.weight = weight
-                    row.sellprice = sellprice
-                    break
+                for col in row.products:
+                    if col.id_product == id_product:
+                        if row.id_silo == silo:
+                            col.type = product_type
+                            col.weight = weight
+                            col.sellprice = sellprice
+                            break
+                        else:
+                            if self.model[silo - 1].capacity <= total_amount:
+                                self.model[silo - 1].products(p)
+                            row.products.remove(col)
 
-        self.model = [i for i in self.model if i.id_product != int(id_product)]
-
-        return render_template('product_detail.html', value=p)
+        return render_template('product_detail.html', value=p, value2=silo)
 
     def products(self):
-        data = [(i.id_product, i.type, i.date, i.weight) for i in self.model]
+        data = []
+        for row in self.model:
+            for col in row.products:
+                data.append(col)
+        print(data)
         return render_template('productcreation.html', value=data)
 
     def product_delete(self, id_product):
-        self.model = [i for i in self.model if i.id_product != int(id_product)]
-        data = [(i.id_product, i.type, i.weight, i.sellprice) for i in self.model]
+        data = []
+        for row in self.model:
+            for col in row.products:
+                if col.id_product == id_product:
+                    row.products.remove(col)
+                data.append(col)
+
         return render_template('productcreation.html', value=data)
+
+    def show_products(self, id_silo):
+        products = []
+        for row in self.model:
+            for col in row.products:
+                products.append(col)
+        return render_template('show_product.html', value=products)

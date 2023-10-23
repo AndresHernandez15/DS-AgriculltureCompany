@@ -1,3 +1,6 @@
+from logic.product import Product
+
+
 class Silo(object):
     """
     Class used to represent a silo.
@@ -61,13 +64,13 @@ class Silo(object):
         return self._products
 
     @products.setter
-    def products(self, products: list):
-        """ Sets the list of products in the silo.
+    def products(self, product: Product):
+        """ Adds a product to the list.
 
-        :param products: The list of products in the silo.
-        :type products: list
+        :param product: The list of products in the silo.
+        :type product: list
         """
-        self._products = products
+        self._products.append(product)
 
     def __str__(self):
         """ Returns str of silo.

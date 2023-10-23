@@ -2,7 +2,7 @@ class Product(object):
     """
     Class used to represent a product.
     """
-    def __init__(self, id_product: int = 0, type: str = '', weight: float = 0.0, sellprice: float = 0.0):
+    def __init__(self, id_product: int = 0, type: str = '', weight: float = 0.0, sellprice: float = 0.0, amount: int = 0):
         """
         product Constructor Object.
 
@@ -14,11 +14,14 @@ class Product(object):
         :type weight: float
         :param sellprice: The sell price of the product.
         :type sellprice: float
+        :param amount: Number of boxes occupied by the product.
+        :type amount: int
         """
         self._id_product = id_product
         self._type = type
         self._weight = weight
         self._sellprice = sellprice
+        self._amount = amount
 
     @property
     def id_product(self) -> int:
@@ -87,11 +90,27 @@ class Product(object):
     def sellprice(self, sellprice: float):
         """ Sets the sell price of the product.
 
-        :param id_silo: The sell price of the product.
-        :type id_silo: int
+        :param sellprice: The sell price of the product.
+        :type sellprice: int
         """
         self._sellprice = sellprice
 
+    @property
+    def amount(self) -> int:
+        """ Returns the amount of the product
+
+        :return: The amount of the product
+        :rtype: int
+        """
+        return self._amount
+
+    @amount.setter
+    def amount(self, amount: int):
+        """ Sets the amount of the product
+
+        :param amount: The amount of the product
+        :type amount: int
+        """
 
     def __str__(self):
         """ Returns str of product.
