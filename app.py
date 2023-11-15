@@ -3,7 +3,7 @@ from datetime import datetime
 import uvicorn
 from fastapi import FastAPI, Form, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
@@ -157,6 +157,9 @@ def get_product_delete(id_product: int, request: Request):
 def get_product_show(id_silo: int, request: Request):
     return controller.show_products(id_silo, request)
 
+@app.get("/favicon.ico", include_in_schema=False)
+def favicon():
+    return JSONResponse(content="", status_code=200)
 
 if __name__ == "__main__":
     uvicorn.run('app:app')
