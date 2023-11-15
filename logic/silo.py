@@ -2,22 +2,21 @@ from logic.product import Product
 
 
 class Silo(object):
+    _silo_id_counter = 0
     """
     Class used to represent a silo.
     """
-    def __init__(self, id_silo: int = 0, capacity: int = 0):
+    def __init__(self, capacity: int = 0):
         """
         silo Constructor Object.
 
-        :param id_silo: The unique identifier of the silo.
-        :type id_silo: int
         :param capacity: The capacity of the silo.
         :type capacity: int
         """
-        self._id_silo = id_silo
+        Silo._silo_id_counter += 1
+        self._id_silo = Silo._silo_id_counter
         self._capacity = capacity
         self._products = []
-
     @property
     def id_silo(self) -> int:
         """ Returns the unique identifier of the silo.
@@ -26,15 +25,6 @@ class Silo(object):
         :rtype: int
         """
         return self._id_silo
-
-    @id_silo.setter
-    def id_silo(self, id_silo: int):
-        """ Sets the unique identifier of the silo.
-
-        :param id_silo: The unique identifier of the silo.
-        :type id_silo: int
-        """
-        self._id_silo = id_silo
 
     @property
     def capacity(self) -> int:

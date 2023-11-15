@@ -4,7 +4,7 @@ class Product(object):
     """
     def __init__(self, id_product: int = 0, type: str = '', weight: float = 0.0, sellprice: float = 0.0, amount: int = 0):
         """
-        product Constructor Object.
+        Product Constructor Object.
 
         :param id_product: The unique identifier of the product.
         :type id_product: int
@@ -97,20 +97,21 @@ class Product(object):
 
     @property
     def amount(self) -> int:
-        """ Returns the amount of the product
+        """ Returns the amount of the product.
 
-        :return: The amount of the product
+        :return: The amount of the product.
         :rtype: int
         """
         return self._amount
 
     @amount.setter
     def amount(self, amount: int):
-        """ Sets the amount of the product
+        """ Sets the amount of the product.
 
-        :param amount: The amount of the product
+        :param amount: The amount of the product.
         :type amount: int
         """
+        self._amount = amount
 
     def __str__(self):
         """ Returns str of product.

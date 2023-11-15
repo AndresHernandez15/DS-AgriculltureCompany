@@ -1,145 +1,162 @@
-from flask import Flask, render_template
-from flask_bootstrap import Bootstrap
-from logic.cropController import CropController
-from logic.SiloController import SiloController
+from datetime import datetime
 
-app = Flask(__name__)
-bootstrap = Bootstrap(app)
+import uvicorn
+from fastapi import FastAPI, Form, Request
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 
-crop_controller = CropController()
-silo_controller = SiloController()
+from logic.controller import Controller
+
+app = FastAPI()
+controller = Controller()
+app.mount("/static", StaticFiles(directory="static"), name="static")
+templates = Jinja2Templates(directory="templates")
+
+origins = ['*']
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
-@app.route("/")
-def home():
-    return render_template('index.html')
+@app.get("/", response_class=HTMLResponse)
+def home(request: Request):
+    return templates.TemplateResponse('index.html', {"request": request})
 
 
-@app.route("/about_us")
-def about_us():
-    return render_template('about_us.html')
+@app.get("/about_us", response_class=HTMLResponse)
+def about_us(request: Request):
+    return templates.TemplateResponse('about_us.html', {"request": request})
 
 
-@app.route("/contact")
-def contact_us():
-    return render_template('contact_us.html')
+@app.get("/contact", response_class=HTMLResponse)
+def contact_us(request: Request):
+    return templates.TemplateResponse('contact_us.html', {"request": request})
 
 
 """ Crop Endpoints """
 
 
-@app.route("/crop", methods=["GET"])
-def crop():
-    return crop_controller.crop()
+@app.get("/crop", response_class=HTMLResponse)
+def get_crop(request: Request):
+    return controller.crop(request)
 
 
-@app.route('/crop_update/<id_crop>', methods=['GET'])
-def crop_update(id_crop):
-    return crop_controller.crop_update(id_crop)
+@app.get('/crop_update/{id_crop}', response_class=HTMLResponse)
+def get_crop_update(id_crop: int, request: Request):
+    return controller.crop_update(id_crop, request)
 
 
-@app.route('/crop_detail', methods=['POST'])
-def crop_detail():
-    return crop_controller.crop_detail()
+@app.post('/crop_detail', response_class=HTMLResponse)
+def post_crop_detail(request: Request, op: str = Form(...), id_crop: int = Form(...),
+                     crop_type: str = Form(...), area: float = Form(...),
+                     date: str = Form(...), amount: int = Form(...), price: float = Form(...)):
+    return controller.crop_detail(request, op, id_crop, crop_type, area, datetime.strptime(date, "%Y-%m-%d"),
+                                  amount, price)
 
 
-@app.route('/cultivation')
-def cultivation():
-    return crop_controller.cultivation()
+@app.get('/cultivation', response_class=HTMLResponse)
+def get_cultivation(request: Request):
+    return controller.cultivation(request)
 
 
-@app.route('/crop_delete/<id_crop>', methods=['GET'])
-def crop_delete(id_crop):
-    return crop_controller.crop_delete(id_crop)
+@app.get('/crop_delete/{id_crop}', response_class=HTMLResponse)
+def get_crop_delete(id_crop: int, request: Request):
+    return controller.crop_delete(id_crop, request)
 
 
 """ Harvest Endpoints """
 
 
-@app.route('/harvest/<id_harvest>', methods=['GET'])
-def harvest(id_harvest):
-    return crop_controller.harvest(id_harvest)
+@app.get('/harvest/{id_harvest}', response_class=HTMLResponse)
+def get_harvest(id_harvest: int, request: Request):
+    return controller.harvest(id_harvest, request)
 
 
-@app.route('/harvest_update/<id_harvest>', methods=['GET'])
-def harvest_update(id_harvest):
-    return crop_controller.harvest_update(id_harvest)
+@app.get('/harvest_update/{id_harvest}', response_class=HTMLResponse)
+def get_harvest_update(id_harvest: int, request: Request):
+    return controller.harvest_update(id_harvest, request)
 
 
-@app.route('/harvest_detail', methods=['POST'])
-def harvest_detail():
-    return crop_controller.harvest_detail()
+@app.post('/harvest_detail', response_class=HTMLResponse)
+def post_harvest_detail(request: Request, op: str = Form(...), id_harvest: int = Form(...),
+                        crop_type: str = Form(...), date: str = Form(...), weight: float = Form(...)):
+    return controller.harvest_detail(request, op, id_harvest, crop_type, datetime.strptime(date, "%Y-%m-%d"),
+                                     weight)
 
 
-@app.route('/harvested')
-def harvested():
-    return crop_controller.harvested()
+@app.get('/harvested', response_class=HTMLResponse)
+def get_harvested(request: Request):
+    return controller.harvested(request)
 
 
-@app.route('/harvest_delete/<id_harvest>', methods=['GET'])
-def harvest_delete(id_harvest):
-    return crop_controller.harvest_delete(id_harvest)
+@app.get('/harvest_delete/{id_harvest}', response_class=HTMLResponse)
+def get_harvest_delete(id_harvest: int, request: Request):
+    return controller.harvest_delete(id_harvest, request)
 
 
 """ Silo Endpoints """
 
-@app.route("/silo", methods=["GET"])
-def silo():
-    return silo_controller.silo()
+
+@app.get('/silo', response_class=HTMLResponse)
+def get_silo(request: Request):
+    return controller.silo(request)
 
 
-@app.route('/silo_update/<id_silo>', methods=['GET'])
-def silo_update(id_silo):
-    return silo_controller.silo_update(id_silo)
+@app.get('/silo_update/{id_silo}', response_class=HTMLResponse)
+def get_silo_update(id_silo: int, request: Request):
+    return controller.silo_update(id_silo, request)
 
 
-@app.route('/silo_detail', methods=['POST'])
-def silo_detail():
-    return silo_controller.silo_detail()
+@app.post('/silo_detail', response_class=HTMLResponse)
+def post_silo_detail(request: Request, op: str = Form(...), capacity: int = Form(...)):
+    return controller.silo_detail(request, op, capacity)
 
 
-@app.route('/silocreation')
-def silocreation():
-    return silo_controller.silocreation()
+@app.get('/silocreation', response_class=HTMLResponse)
+def get_silocreation(request: Request):
+    return controller.silocreation(request)
 
 
-@app.route('/silo_delete/<id_silo>', methods=['GET'])
-def silo_delete(id_silo):
-    return silo_controller.silo_delete(id_silo)
+@app.get('/silo_delete/{id_silo}', response_class=HTMLResponse)
+def get_silo_delete(id_silo: int, request: Request):
+    return controller.silo_delete(id_silo, request)
 
 
 """ Product Endpoints """
 
 
-@app.route('/product/<id_product>', methods=['GET'])
-def product(id_product):
-    return silo_controller.product(id_product)
+@app.get('/product/{id_product}', response_class=HTMLResponse)
+def get_product(id_product: int, request: Request):
+    return controller.product(id_product, request)
 
 
-@app.route('/product_update/<id_product>', methods=['GET'])
-def product_update(id_product):
-    return silo_controller.product_update(id_product)
+@app.post('/product_detail', response_class=HTMLResponse)
+def post_product_detail(request: Request, op: str = Form(...), silo: int = Form(...), id_product: int = Form(...),
+                        product_type: str = Form(...), weight: float = Form(...), sellprice: float = Form(...),
+                        amount: int = Form(...)):
+    return controller.product_detail(request, op, silo, id_product, product_type, weight, sellprice, amount)
 
 
-@app.route('/product_detail', methods=['POST'])
-def product_detail():
-    return silo_controller.product_detail()
+@app.get('/productcreation', response_class=HTMLResponse)
+def get_products(request: Request):
+    return controller.products(request)
 
 
-@app.route('/productcreation')
-def products():
-    return silo_controller.products()
+@app.get('/product_delete/{id_product}', response_class=HTMLResponse)
+def get_product_delete(id_product: int, request: Request):
+    return controller.product_delete(id_product, request)
 
 
-@app.route('/product_delete/<id_product>', methods=['GET'])
-def product_delete(id_product):
-    return silo_controller.product_delete(id_product)
+@app.get('/show_products/{id_silo}', response_class=HTMLResponse)
+def get_product_show(id_silo: int, request: Request):
+    return controller.show_products(id_silo, request)
 
 
-@app.route('/show_products/<id_silo>', methods=['GET'])
-def product_show(id_silo):
-    return silo_controller.show_products(id_silo)
-
-
-if __name__ == '__main__':
-    app.run()
+if __name__ == "__main__":
+    uvicorn.run('app:app')

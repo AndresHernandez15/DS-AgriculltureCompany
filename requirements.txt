@@ -1,3 +1,5 @@
-Flask
+fastapi
 Gunicorn
-Flask-Bootstrap~=3.3.7.1
+uvicorn
+jinja2
+python-multipart

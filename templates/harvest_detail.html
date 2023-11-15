@@ -13,7 +13,7 @@
             <ul class="list-group">
                 <li class="list-group-item"><strong>ID:</strong> {{ value.id_harvest }}</li>
                 <li class="list-group-item"><strong>Crop Type:</strong> {{ value.type }}</li>
-                <li class="list-group-item"><strong>Harvest Date:</strong> {{ value.date.strftime('%Y-%m-%d') }}</li>
+                <li class="list-group-item"><strong>Harvest Date:</strong> {{ value.date }}</li>
                 <li class="list-group-item"><strong>Weight:</strong> {{ value.weight }} kg</li>
             </ul>
         </div>
@@ -21,6 +21,6 @@
 </div>
 
 <br>
-<a class="btn btn-primary" href="/">Back Home</a>
+<a class="btn btn-primary" href="/harvested">Go To Harvest</a>
 
 {% endblock %}
