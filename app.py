@@ -158,5 +158,10 @@ def get_product_show(id_silo: int, request: Request):
     return controller.show_products(id_silo, request)
 
 
+@app.get("/favicon.ico")
+async def get_favicon():
+    return FileResponse("static/favicon.ico")
+    
+
 if __name__ == "__main__":
     uvicorn.run('app:app')
