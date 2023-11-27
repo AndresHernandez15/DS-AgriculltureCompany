@@ -1,167 +1,131 @@
+from flask import Flask, render_template, request
 from datetime import datetime
-
-import uvicorn
-from fastapi import FastAPI, Form, Request
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import HTMLResponse, JSONResponse
-from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
-
 from logic.controller import Controller
 
-app = FastAPI()
+app = Flask(__name__)
 controller = Controller()
-app.mount("/static", StaticFiles(directory="static"), name="static")
-templates = Jinja2Templates(directory="templates")
 
-origins = ['*']
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+@app.route("/", methods=["GET"])
+def home():
+    return render_template('index.html')
 
+@app.route("/about_us", methods=["GET"])
+def about_us():
+    return render_template('about_us.html')
 
-@app.get("/", response_class=HTMLResponse)
-def home(request: Request):
-    return templates.TemplateResponse('index.html', {"request": request})
-
-
-@app.get("/about_us", response_class=HTMLResponse)
-def about_us(request: Request):
-    return templates.TemplateResponse('about_us.html', {"request": request})
-
-
-@app.get("/contact", response_class=HTMLResponse)
-def contact_us(request: Request):
-    return templates.TemplateResponse('contact_us.html', {"request": request})
+@app.route("/contact", methods=["GET"])
+def contact_us():
+    return render_template('contact_us.html')
 
 
 """ Crop Endpoints """
 
+@app.route("/crop", methods=["GET"])
+def get_crop():
+    return controller.crop()
 
-@app.get("/crop", response_class=HTMLResponse)
-def get_crop(request: Request):
-    return controller.crop(request)
+@app.route('/crop_update/<int:id_crop>', methods=['GET'])
+def get_crop_update(id_crop):
+    return controller.crop_update(id_crop)
 
+@app.route('/crop_detail', methods=['POST'])
+def post_crop_detail():
+    op = request.form['op']
+    id_crop = int(request.form['id_crop'])
+    crop_type = request.form['crop_type']
+    area = float(request.form['area'])
+    date = datetime.strptime(request.form['date'], '%Y-%m-%d')
+    amount = int(request.form['amount'])
+    price = float(request.form['price'])
+    return controller.crop_detail(op, id_crop, crop_type, area, date, amount, price)
 
-@app.get('/crop_update/{id_crop}', response_class=HTMLResponse)
-def get_crop_update(id_crop: int, request: Request):
-    return controller.crop_update(id_crop, request)
+@app.route('/cultivation', methods=['GET'])
+def get_cultivation():
+    return controller.cultivation()
 
-
-@app.post('/crop_detail', response_class=HTMLResponse)
-def post_crop_detail(request: Request, op: str = Form(...), id_crop: int = Form(...),
-                     crop_type: str = Form(...), area: float = Form(...),
-                     date: str = Form(...), amount: int = Form(...), price: float = Form(...)):
-    return controller.crop_detail(request, op, id_crop, crop_type, area, datetime.strptime(date, "%Y-%m-%d"),
-                                  amount, price)
-
-
-@app.get('/cultivation', response_class=HTMLResponse)
-def get_cultivation(request: Request):
-    return controller.cultivation(request)
-
-
-@app.get('/crop_delete/{id_crop}', response_class=HTMLResponse)
-def get_crop_delete(id_crop: int, request: Request):
-    return controller.crop_delete(id_crop, request)
-
+@app.route('/crop_delete/<int:id_crop>', methods=['GET'])
+def get_crop_delete(id_crop):
+    return controller.crop_delete(id_crop)
 
 """ Harvest Endpoints """
 
+@app.route('/harvest/<int:id_harvest>', methods=['GET'])
+def get_harvest(id_harvest):
+    return controller.harvest(id_harvest)
 
-@app.get('/harvest/{id_harvest}', response_class=HTMLResponse)
-def get_harvest(id_harvest: int, request: Request):
-    return controller.harvest(id_harvest, request)
+@app.route('/harvest_update/<int:id_harvest>', methods=['GET'])
+def get_harvest_update(id_harvest):
+    return controller.harvest_update(id_harvest)
 
+@app.route('/harvest_detail', methods=['POST'])
+def post_harvest_detail():
+    op = request.form['op']
+    id_harvest = int(request.form['id_harvest'])
+    crop_type = request.form['crop_type']
+    date = datetime.strptime(request.form['date'], '%Y-%m-%d')
+    weight = float(request.form['weight'])
+    return controller.harvest_detail(op, id_harvest, crop_type, date, weight)
 
-@app.get('/harvest_update/{id_harvest}', response_class=HTMLResponse)
-def get_harvest_update(id_harvest: int, request: Request):
-    return controller.harvest_update(id_harvest, request)
+@app.route('/harvested', methods=['GET'])
+def get_harvested():
+    return controller.harvested()
 
-
-@app.post('/harvest_detail', response_class=HTMLResponse)
-def post_harvest_detail(request: Request, op: str = Form(...), id_harvest: int = Form(...),
-                        crop_type: str = Form(...), date: str = Form(...), weight: float = Form(...)):
-    return controller.harvest_detail(request, op, id_harvest, crop_type, datetime.strptime(date, "%Y-%m-%d"),
-                                     weight)
-
-
-@app.get('/harvested', response_class=HTMLResponse)
-def get_harvested(request: Request):
-    return controller.harvested(request)
-
-
-@app.get('/harvest_delete/{id_harvest}', response_class=HTMLResponse)
-def get_harvest_delete(id_harvest: int, request: Request):
-    return controller.harvest_delete(id_harvest, request)
-
+@app.route('/harvest_delete/<int:id_harvest>', methods=['GET'])
+def get_harvest_delete(id_harvest):
+    return controller.harvest_delete(id_harvest)
 
 """ Silo Endpoints """
 
+@app.route("/silo", methods=["GET"])
+def get_silo():
+    return controller.silo()
 
-@app.get('/silo', response_class=HTMLResponse)
-def get_silo(request: Request):
-    return controller.silo(request)
+@app.route('/silo_update/<int:id_silo>', methods=['GET'])
+def get_silo_update(id_silo):
+    return controller.silo_update(id_silo)
 
+@app.route('/silo_detail', methods=['POST'])
+def post_silo_detail():
+    op = request.form['op']
+    capacity = int(request.form['capacity'])
+    return controller.silo_detail(op, capacity)
 
-@app.get('/silo_update/{id_silo}', response_class=HTMLResponse)
-def get_silo_update(id_silo: int, request: Request):
-    return controller.silo_update(id_silo, request)
+@app.route('/silocreation', methods=['GET'])
+def get_silocreation():
+    return controller.silocreation()
 
-
-@app.post('/silo_detail', response_class=HTMLResponse)
-def post_silo_detail(request: Request, op: str = Form(...), capacity: int = Form(...)):
-    return controller.silo_detail(request, op, capacity)
-
-
-@app.get('/silocreation', response_class=HTMLResponse)
-def get_silocreation(request: Request):
-    return controller.silocreation(request)
-
-
-@app.get('/silo_delete/{id_silo}', response_class=HTMLResponse)
-def get_silo_delete(id_silo: int, request: Request):
-    return controller.silo_delete(id_silo, request)
-
+@app.route('/silo_delete/<int:id_silo>', methods=['GET'])
+def get_silo_delete(id_silo):
+    return controller.silo_delete(id_silo)
 
 """ Product Endpoints """
 
+@app.route('/product/<int:id_product>', methods=['GET'])
+def get_product(id_product):
+    return controller.product(id_product)
 
-@app.get('/product/{id_product}', response_class=HTMLResponse)
-def get_product(id_product: int, request: Request):
-    return controller.product(id_product, request)
+@app.route('/product_detail', methods=['POST'])
+def post_product_detail():
+    op = request.form['op']
+    silo = int(request.form['silo'])
+    id_product = int(request.form['id_product'])
+    product_type = request.form['product_type']
+    weight = float(request.form['weight'])
+    sellprice = float(request.form['sellprice'])
+    amount = int(request.form['amount'])
+    return controller.product_detail(op, silo, id_product, product_type, weight, sellprice, amount)
 
+@app.route('/productcreation', methods=['GET'])
+def get_products():
+    return controller.products()
 
-@app.post('/product_detail', response_class=HTMLResponse)
-def post_product_detail(request: Request, op: str = Form(...), silo: int = Form(...), id_product: int = Form(...),
-                        product_type: str = Form(...), weight: float = Form(...), sellprice: float = Form(...),
-                        amount: int = Form(...)):
-    return controller.product_detail(request, op, silo, id_product, product_type, weight, sellprice, amount)
+@app.route('/product_delete/<int:id_product>', methods=['GET'])
+def get_product_delete(id_product):
+    return controller.product_delete(id_product)
 
+@app.route('/show_products/<int:id_silo>', methods=['GET'])
+def get_product_show(id_silo):
+    return controller.show_products(id_silo)
 
-@app.get('/productcreation', response_class=HTMLResponse)
-def get_products(request: Request):
-    return controller.products(request)
-
-
-@app.get('/product_delete/{id_product}', response_class=HTMLResponse)
-def get_product_delete(id_product: int, request: Request):
-    return controller.product_delete(id_product, request)
-
-
-@app.get('/show_products/{id_silo}', response_class=HTMLResponse)
-def get_product_show(id_silo: int, request: Request):
-    return controller.show_products(id_silo, request)
-
-
-@app.get("/favicon.ico")
-async def get_favicon():
-    return FileResponse("static/favicon.ico")
-    
-
-if __name__ == "__main__":
-    uvicorn.run('app:app')
+if __name__ == '__main__':
+    app.run(debug=True)
