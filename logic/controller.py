@@ -1,12 +1,10 @@
-import json
-
+from datetime import datetime
 from flask import render_template, request
 
 from logic.crop import Crop
 from logic.harvest import Harvest
-from logic.product import Product
 from logic.silo import Silo
-
+from logic.product import Product
 
 class Controller:
     def __init__(self):
@@ -82,7 +80,9 @@ class Controller:
         data = [(i.id_harvest, i.type, i.date, i.weight) for i in self.harvests]
         return render_template('harvested.html', value=data)
 
+
     """ Silo Methods """
+
 
     def silo(self):
         return render_template('silo.html')
@@ -166,47 +166,3 @@ class Controller:
             return render_template('show_product.html', value=products)
         else:
             return render_template('silo_not_found.html')
-
-    def save_to_json(self, filename):
-        data = {
-            "crops": [(i.id_crop, i.type, i.area, i.date, i.amount, i.price) for i in self.crops],
-            "harvests": [(i.id_harvest, i.type, i.date, i.weight) for i in self.harvests],
-            "silos": [(s.id_silo, s.capacity) for s in self.silos],
-            "products": []
-        }
-
-        for row in self.silos:
-            for col in row.products:
-                data["products"].append({
-                    "id_product": col.id_product,
-                    "type": col.type,
-                    "weight": col.weight,
-                    "sellprice": col.sellprice,
-                    "amount": col.amount
-                })
-
-        with open(filename, 'w') as json_file:
-            json.dump(data, json_file, indent=4)
-
-    def load_from_json(self, filename):
-        try:
-            with open(filename, 'r') as json_file:
-                data = json.load(json_file)
-
-            self.crops = [Crop(*crop) for crop in data.get("crops", [])]
-            self.harvests = [Harvest(*harvest) for harvest in data.get("harvests", [])]
-            self.silos = [Silo(*silo) for silo in data.get("silos", [])]
-
-            for product_data in data.get("products", []):
-                silo_id = product_data.get("silo_id", 1)
-                silo = next((s for s in self.silos if s.id_silo == silo_id), None)
-
-                if silo:
-                    product = Product(**product_data)
-                    silo.products.append(product)
-
-        except (json.JSONDecodeError, FileNotFoundError):
-            # Handle errors, e.g., by initializing with empty data
-            self.crops = []
-            self.harvests = []
-            self.silos = []
