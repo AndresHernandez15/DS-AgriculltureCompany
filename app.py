@@ -5,6 +5,8 @@ from logic.controller import Controller
 app = Flask(__name__)
 controller = Controller()
 
+controller.load_from_json('data.json')
+
 @app.route("/", methods=["GET"])
 def home():
     return render_template('index.html')
@@ -126,6 +128,11 @@ def get_product_delete(id_product):
 @app.route('/show_products/<int:id_silo>', methods=['GET'])
 def get_product_show(id_silo):
     return controller.show_products(id_silo)
+
+
+@app.teardown_appcontext
+def save_data_on_shutdown(error=None):
+    controller.save_to_json('data.json')
 
 if __name__ == '__main__':
     app.run(debug=True)
