@@ -4,8 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Agriculture Company{% endblock %}</title>
+    <!-- Bootstrap CSS link (adjust the path if needed) -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <!-- Add any additional stylesheets or scripts here -->
+    <!-- Add your custom styles here -->
+    <style>
+        body {
+            background-color: #d4edda; /* Adjust the background color as needed */
+        }
+
+        .navbar {
+            background-color: #198754 !important; /* Green color for the navbar */
+        }
+
+        .footer {
+            background-color: #198754; /* Green color for the footer */
+            color: #fff; /* Text color for the footer */
+            padding: 10px 0;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
 </head>
 <body>
     {% block navbar %}
@@ -43,13 +62,13 @@
 
     <footer class="footer mt-5">
         <div class="container">
-            <p class="text-muted text-center">&copy; Agriculture Company 2023</p>
+            <p class="text-muted text-center">© Agriculture Company 2023</p>
         </div>
     </footer>
 
+    <!-- Bootstrap JS and Popper.js scripts (adjust the paths if needed) -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    <!-- Add any additional scripts here -->
 </body>
 </html>
-
